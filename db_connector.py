@@ -1,14 +1,17 @@
 from sqlalchemy import create_engine
-from models import Base
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
+
 
 DB_NAME = "rutaaccesible"
 
 my_DB = URL(drivername='mysql', host='localhost',
+            database=DB_NAME,
             query={'read_default_file': '~/.my.cnf'}
             )
 
 engine = create_engine(my_DB)
-engine.execute("CREATE DATABASE " + DB_NAME)
-engine.execute("USE " + DB_NAME)
-Base.metadata.create_all(engine)
+
+Session = sessionmaker()
+Session.configure(bind=engine)
+session = Session()
